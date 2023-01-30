@@ -10,6 +10,8 @@ while jugando:
         if event.type == pygame.QUIT:
             jugando = False
 
-ventana.fill((255, 255, 255))
-pygame.display.flip()
-pygame.time.Clock().tick(60)
+    ventana.fill((252, 243, 207))
+    pygame.display.flip()
+    pygame.time.Clock().tick(60)
+
+pygame.quit()
