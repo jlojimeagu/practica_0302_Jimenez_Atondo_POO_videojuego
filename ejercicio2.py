@@ -1,9 +1,8 @@
 import pygame
 
-
 pygame.init()
 ventana = pygame.display.set_mode((640, 480))
-pygame.display.set_caption("Ejemplo 3")
+pygame.display.set_caption("the game's tom")
 
 ball = pygame.image.load("ball.png")
 ballrect = ball.get_rect()
@@ -26,9 +25,9 @@ while jugando:
     # Compruebo si se ha pulsado alguna tecla
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        baterect = baterect.move(-3,0)
+        baterect = baterect.move(-7, 0)
     if keys[pygame.K_RIGHT]:
-        baterect = baterect.move(3,0)
+        baterect = baterect.move(7, 0)
 
     # Compruebo si hay colisión
     if baterect.colliderect(ballrect):
@@ -38,7 +37,7 @@ while jugando:
         speed[0] = -speed[0]
     if ballrect.top < 0 or ballrect.bottom > ventana.get_height():
         speed[1] = -speed[1]
-    ventana.fill((252, 243, 207))
+    ventana.fill((0, 0, 0))
     ventana.blit(ball, ballrect)
 
     # Dibujo el bate
