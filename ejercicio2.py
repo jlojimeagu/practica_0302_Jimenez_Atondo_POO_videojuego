@@ -6,8 +6,8 @@ pygame.display.set_caption("the game's tom")
 
 ball = pygame.image.load("ball.png")
 ballrect = ball.get_rect()
-speed = [5, 5]
-ballrect.move_ip(0, 0)
+speed = [3, 3]
+ballrect.move_ip(320, 240)
 
 # Crea el objeto bate, y obtengo su rectángulo
 bate = pygame.image.load("bate.png")
@@ -15,6 +15,10 @@ baterect = bate.get_rect()
 
 # Pongo el bate en la parte inferior de la pantalla
 baterect.move_ip(240, 450)
+
+__bloque = pygame.image.load("ladrillo.png")
+__ladrillo = __bloque.get_rect()
+__ladrillo.move_ip(0, 0)
 
 jugando = True
 while jugando:
@@ -37,6 +41,8 @@ while jugando:
         speed[0] = -speed[0]
     if ballrect.top < 0 or ballrect.bottom > ventana.get_height():
         speed[1] = -speed[1]
+
+
     ventana.fill((0, 0, 0))
     ventana.blit(ball, ballrect)
 
@@ -44,5 +50,8 @@ while jugando:
     ventana.blit(bate, baterect)
     pygame.display.flip()
     pygame.time.Clock().tick(60)
+
+    ventana.blit(__bloque, __ladrillo)
+
 
 pygame.quit()
