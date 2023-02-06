@@ -1,12 +1,13 @@
 import pygame
+from pygame import mixer
 
 pygame.init()
 ventana = pygame.display.set_mode((640, 480))
-pygame.display.set_caption("the game's tom")
+pygame.display.set_caption("the tom´s game")
 
 ball = pygame.image.load("ball.png")
 ballrect = ball.get_rect()
-speed = [3, 3]
+speed = [5, 5]
 ballrect.move_ip(320, 240)
 
 # Crea el objeto bate, y obtengo su rectángulo
@@ -25,6 +26,13 @@ while jugando:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             jugando = False
+    # Mensaje de Game Over
+    if ballrect.bottom > ventana.get_height():
+        texto = fuente.render("Game Over", True, (125, 125, 125))
+        texto_rect = texto.get_rect()
+        texto_x = ventana.get_width() / 2 - texto_rect.width / 2
+        texto_y = ventana.get_height() / 2 - texto_rect.height / 2
+        ventana.blit(texto, [texto_x, texto_y])
 
     # Compruebo si se ha pulsado alguna tecla
     keys = pygame.key.get_pressed()
@@ -52,6 +60,5 @@ while jugando:
     pygame.time.Clock().tick(60)
 
     ventana.blit(__bloque, __ladrillo)
-
 
 pygame.quit()
