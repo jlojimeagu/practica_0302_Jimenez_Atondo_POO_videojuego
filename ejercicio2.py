@@ -45,12 +45,16 @@ while jugando:
     # Mensaje de Game Over
     if ballrect.bottom > ventana.get_height():
         texto = fuente.render("Game Over", True, (125, 125, 125))
-        texto_rect = texto.get_rect()
-        texto_x = ventana.get_width() / 2 - texto_rect.width / 2
-        texto_y = ventana.get_height() / 2 - texto_rect.height / 2
+        text2 = fuente.render("press space to finish",True,(125, 125, 125))
+        text2rect = text2.get_rect()
+        textorect = texto.get_rect()
+        texto_x = ventana.get_width() / 2 - textorect.width / 2
+        texto_y = ventana.get_height() / 2 - textorect.height / 2
+        text2_x = ventana.get_width() / 2.2 - textorect.width / 2
+        text2_y = ventana.get_height() / 2.5 - textorect.height / 2.5
         ventana.blit(texto, [texto_x, texto_y])
-        wait = pygame.time.wait(300)
-
+        ventana.blit(text2, [text2_x, text2_y])
+        pygame.time.delay(3000)
     else:
         #dibujo a jerry
         ventana.fill((0, 0, 0))
