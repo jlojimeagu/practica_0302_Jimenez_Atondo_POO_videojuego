@@ -24,23 +24,20 @@ baterect = bate.get_rect()
 # Pongo el bate en la parte inferior de la pantalla
 baterect.move_ip(240, 450)
 
-__bloque = pygame.image.load("ladrillo.png")
-__ladrillo = __bloque.get_rect()
-__ladrillo.move_ip(0, 0)
 fuente = pygame.font.Font(None, 36)
+
 jugando = True
 while jugando:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             jugando = False
-    keys = pygame.key.get_pressed()
     # Compruebo si se ha pulsado alguna tecla
+    keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         baterect = baterect.move(-7, 0)
     if keys[pygame.K_RIGHT]:
-
-    # Compruebo si hay colisión
         baterect = baterect.move(7, 0)
+    # Compruebo si hay colisión
     if baterect.colliderect(ballrect):
         speed[1] = -speed[1]
     ballrect = ballrect.move(speed)
