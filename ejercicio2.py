@@ -1,10 +1,11 @@
 import pygame
-#from pygame import mixer
+from pygame import mixer
 
 pygame.init()
 ventana = pygame.display.set_mode((640, 480))
 pygame.display.set_caption("the tom´s game")
 
+#Crear el objeto pelota, define su velocidad y su rectángulo
 ball = pygame.image.load("ball.png")
 ballrect = ball.get_rect()
 speed = [5, 5]
@@ -16,10 +17,10 @@ bate = pygame.image.load("bate.png")
 baterect = bate.get_rect()
 
 # pongo los parametros para la musica
-#mixer.init()
-#theme_sound = mixer.music.load('musica.mp3')
-#theme_sound = mixer.music.set_volume(10)
-#theme_sound = mixer.music.play()
+mixer.init()
+theme_sound = mixer.music.load('musica.mp3')
+theme_sound = mixer.music.set_volume(10)
+theme_sound = mixer.music.play()
 
 # Pongo el bate en la parte inferior de la pantalla
 baterect.move_ip(240, 450)
@@ -40,6 +41,7 @@ while jugando:
         baterect = baterect.move(-7, 0)
     if keys[pygame.K_RIGHT]:
         baterect = baterect.move(7, 0)
+
     # Compruebo si hay colisión
     if baterect.colliderect(ballrect):
         speed[1] = -speed[1]
@@ -48,6 +50,7 @@ while jugando:
         speed[0] = -speed[0]
     if ballrect.top < 0:
         speed[1] = -speed[1]
+
     # Aumento velocidad de la pelota
     ballrect = ballrect.move(speed[0]*ball_speed, speed[1]*ball_speed)
 
@@ -68,9 +71,10 @@ while jugando:
         #dibujo a jerry
         ventana.fill((0, 0, 0))
         ventana.blit(ball, ballrect)
+
         # Dibujo el bate
         ventana.blit(bate, baterect)
 
     pygame.display.flip()
     pygame.time.Clock().tick(60)
-    pygame.quit()
+    
