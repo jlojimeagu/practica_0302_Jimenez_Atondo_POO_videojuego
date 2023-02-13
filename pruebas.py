@@ -1,6 +1,6 @@
 import pygame
-from bloq_tom import bloque
-#from pygame import mixer
+# from bloq_tom import bloque
+# from pygame import mixer
 
 pygame.init()
 ventana = pygame.display.set_mode((640, 480))
@@ -9,28 +9,29 @@ pygame.display.set_caption("the tom´s game")
 ball = pygame.image.load("ball.png")
 ballrect = ball.get_rect()
 speed = [5, 5]
+ball_speed = 1
 ballrect.move_ip(320, 240)
-ballrect = ballrect.move(speed[0]*ball_speed, speed[1]*ball_speed)
 
 # Crea el objeto bate, y obtengo su rectángulo
 bate = pygame.image.load("bate.png")
 baterect = bate.get_rect()
 
 # pongo los parametros para la musica
-#mixer.init()
-#theme_sound = mixer.music.load('musica.mp3')
-#theme_sound = mixer.music.set_volume(10)
-#theme_sound = mixer.music.play()
+# mixer.init()
+# theme_sound = mixer.music.load('musica.mp3')
+# theme_sound = mixer.music.set_volume(10)
+# theme_sound = mixer.music.play()
 
 # Pongo el bate en la parte inferior de la pantalla
 baterect.move_ip(240, 450)
 
-blo = bloque(0, 0, "ladrillo.png")
+# blo = bloque(0, 0, "ladrillo.png")
 
 fuente = pygame.font.Font(None, 36)
 jugando = True
 while jugando:
     keys = pygame.key.get_pressed()
+    ballrect = ballrect.move(speed)
     for event in pygame.event.get():
         if event.type == pygame.QUIT or keys[pygame.K_SPACE]:
             jugando = False
@@ -43,16 +44,17 @@ while jugando:
     # Compruebo si hay colisión
     if baterect.colliderect(ballrect):
         speed[1] = -speed[1]
-    ballrect = ballrect.move(speed)
+        ballrect = ballrect.move(speed[0]*ball_speed, speed[1]*ball_speed)
     if ballrect.left < 0 or ballrect.right > ventana.get_width():
         speed[0] = -speed[0]
     if ballrect.top < 0:
         speed[1] = -speed[1]
+    # Aumento velocidad de la pelota
 
     # Mensaje de Game Over
     if ballrect.bottom > ventana.get_height():
         texto = fuente.render("Game Over", True, (125, 125, 125))
-        text2 = fuente.render("press space to finish",True,(125, 125, 125))
+        text2 = fuente.render("press space to finish", True, (125, 125, 125))
         text2rect = text2.get_rect()
         textorect = texto.get_rect()
         texto_x = ventana.get_width() / 2 - textorect.width / 2
@@ -62,7 +64,7 @@ while jugando:
         ventana.blit(texto, [texto_x, texto_y])
         ventana.blit(text2, [text2_x, text2_y])
     else:
-        #dibujo a jerry
+        # dibujo a jerry
         ventana.fill((0, 0, 0))
         ventana.blit(ball, ballrect)
         # Dibujo el bate
@@ -70,4 +72,3 @@ while jugando:
 
     pygame.display.flip()
     pygame.time.Clock().tick(60)
-pygame.quit()
