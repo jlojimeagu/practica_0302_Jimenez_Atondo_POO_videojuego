@@ -4,7 +4,7 @@ from pygame import mixer
 pygame.init()
 ventana = pygame.display.set_mode((640, 480))
 pygame.display.set_caption("the tom´s game")
-
+pygame.
 #Crear el objeto pelota, define su velocidad y su rectángulo
 ball = pygame.image.load("ball.png")
 ballrect = ball.get_rect()
@@ -57,7 +57,7 @@ while jugando:
     # Mensaje de Game Over
     if ballrect.bottom > ventana.get_height():
         texto = fuente.render("Game Over", True, (125, 125, 125))
-        text2 = fuente.render("press space to finish",True,(125, 125, 125))
+        text2 = fuente.render("press space to finish", True, (125, 125, 125))
         text2rect = text2.get_rect()
         textorect = texto.get_rect()
         texto_x = ventana.get_width() / 2 - textorect.width / 2

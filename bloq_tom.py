@@ -11,5 +11,4 @@ class bloque:
         self.imagen = pygame.image.load(imagen)
         self.imagenrect = pygame.Rect(self.x, self.y, 60, 20)
 
-    def update(self):
-        pygame.draw.rect(screen, GREEN, (self.x,self.y,60,20))
+
