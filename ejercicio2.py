@@ -24,13 +24,16 @@ baterect = bate.get_rect()
 # Pongo el bate en la parte inferior de la pantalla
 baterect.move_ip(240, 450)
 
+# Definimos el tipo de letra de Game over
 fuente = pygame.font.Font(None, 36)
 
+#Inicia el juego
 jugando = True
 while jugando:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             jugando = False
+
     # Compruebo si se ha pulsado alguna tecla
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
