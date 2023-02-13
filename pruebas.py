@@ -1,171 +1,145 @@
-# pong!
 import pygame
-from pygame import gfxdraw
 
-
-class Brick:
-    "Draw Player 2"
-
-    def __init__(self, x, y):
+class pelota:
+    def __init__(self, ventana, x, y):
+        self.ventana = ventana
         self.x = x
         self.y = y
-        self.rect = pygame.Rect(self.x, self.y, 60, 20)
+        self.vx = 0
+        self.vy = 0
 
-    def update(self):
-        pygame.draw.rect(screen, GREEN, (self.x, self.y, 60, 20))
+    def dibujar(self):
+        pygame.draw.rect(self.ventana, (255, 255, 255), (self.x, self.y, 10, 10))
 
-
-class Bar:
-    "Draw Player 2"
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def update(self):
-        pygame.draw.rect(screen, RED, (self.x, self.y, 60, 10))
-        self.rect = pygame.Rect(self.x, self.y, 60, 10)
+    def mover(self):
+        self.x += self.vx
+        self.y += self.vy
 
 
-class Ball:
-    "Draw Player 2"
+class Raqueta:
+    def __init__(self, ventana):
+        self.tamano = 80
+        self.x = 600/2 - self.tamano/2
+        self.y = 380
+        self.centro = self.x + self.tamano/2
+        self.ventana = ventana
+        self.izq = False
+        self.der = False
 
-    def __init__(self, xb, yb):
-        self.xb = xb
-        self.yb = yb
+    def dibujar(self):
+        pygame.draw.rect(self.ventana, (255, 255, 255), (self.x, self.y, self.tamano, 10))
 
-    def update(self):
-        "The ball moves"
-        global ball
-        global ball_x, ball_y
-
-        # sull'asse x Va verso sinistra
-        if ball_x == "left":
-            # sottraggo perchè vado a sinistra
-            ball.xb -= vel_bal
-            # se arriva a 10 rimbalza
-            if ball.xb < 10:
-                ball_x = "right"
-        # va in basso
-        if ball_y == 'down':
-            # allora aumenta y quando va in basso (parte da 0 in alto)
-            ball.yb += vel_bal
-        if ball_y == 'up':
-            # quando va in alto tolgo
-            ball.yb -= vel_bal
-            # se arriva in cima rimbalza in basso
-            if ball.yb < 10:
-                ball_y = 'down'
-        # se va a destra aumenta x
-        if ball_x == "right":
-            ball.xb += vel_bal
-            # a 480 rimbalza verso sinistra
-            if ball.xb > 480:
-                ball_x = "left"
-        gfxdraw.filled_circle(screen, ball.xb, ball.yb, 5, GREEN)
-        self.rect = pygame.Rect(self.xb, self.yb, 10, 10)
+    def mover(self):
+        if self.izq: self.x -= 10
+        if self.der: self.x += 10
+        self.x = 0 if self.x < 0 else 600 - self.tamano if self.x + self.tamano > 600 else self.x
+        self.centro = self.x + self.tamano / 2
 
 
-def collision():
-    global ball, bar, ball_y
+class Bloques:
+    def __init__(self, ventana):
+        self.ventana = ventana
+        self.tablero = [[4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+                        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+                        [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
-    if ball.rect.colliderect(bar):
-        print("Collision detected")
-        ball_y = "up"
-        print(ball_y)
-        print(ball.yb)
-        speed_up()
-
-    for brick in bricks:
-        if ball.rect.colliderect(brick):
-            if ball_y == "up":
-                ball_y = "down"
-            else:
-                ball_y = "up"
-
-    if ball.yb > 500:
-        ball.xb, ball.yb = 500, 300
-
-
-def exit(event):
-    global loop
-
-    if event.type == pygame.QUIT:
-        loop = 0
-    if event.type == pygame.KEYUP:
-        if event.key == pygame.K_ESCAPE:
-            loop = 0
-    return loop
+    def dibujar(self):
+        for i in range(4):
+            for j in range(10):
+                if self.tablero[i][j] != 0:
+                    if self.tablero[i][j] == 4:
+                        color = (255, 255, 255)
+                    elif self.tablero[i][j] == 3:
+                        color = (55, 255, 255)
+                    elif self.tablero[i][j] == 2:
+                        color = (55, 55, 255)
+                    elif self.tablero[i][j] == 1:
+                        color = (255, 55, 255)
+                    pygame.draw.rect(self.ventana, color, (j*60, i*10 + 35, 59, 9))
 
 
-def speed_up():
-    global bar, vel_bal
-    bar.x = pygame.mouse.get_pos()[0]
-    if startx == bar.x:
-        vel_bal = 2
-        print("Normal speed")
-    else:
-        vel_bal = 3
-        print("Speed up")
+def refrescar(ventana):
+    ventana.fill((0, 0, 0))
+    bola.dibujar()
+    r1.dibujar()
+    tablero.dibujar()
+    text = font.render(str(golpes), True, ((255, 255, 255)))
+    text_rect = text.get_rect()
+    text_rect.centerx = 300
+    ventana.blit(text, text_rect)
 
 
-def create_bricks():
-    "The bricks scheme"
-    blist = """
-11001
-11111
-01111
-01010
-""".splitlines()[1:]
-    bricks = []
-    h = 30
-    w = 0
-    for line in blist:
-        for brick in line:
-            if brick == "1":
-                bricks.append(Brick(20 + w * 100, h))
-            w += 1
-            if w == 5:
-                w = 0
-                h += 50
-    return bricks
-
-def show_bricks():
-    for brick in bricks:
-        brick.update()
-
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-ball_x = 'left'
-ball_y = 'down'
-scorep1 = 0
-scorep2 = 0
-vel_bal = 2
-pygame.init()
-clock = pygame.time.Clock()
-screen = pygame.display.set_mode((500, 500))
-pygame.display.set_caption("Game")
-startx = 0
-bar = Bar(10, 480)
-ball = Ball(100, 100)
-bricks = create_bricks()
-pygame.mouse.set_visible(False)
-loop = 1
-while loop:
-    screen.fill((0, 0, 0))
-    keys = pygame.key.get_pressed()
-    for event in pygame.event.get():
-        loop = exit(event)
-    if pygame.mouse.get_pos()[0] > 10 and pygame.mouse.get_pos()[0] < 430:
-        bar.x = pygame.mouse.get_pos()[0]
-    ball.update()
-    bar.update()
-    collision()
-    startx = bar.x
-    show_bricks()
-    pygame.display.update()
-    clock.tick(120)
+def colisiones():
+    global golpes
+    if bola.y < 3*10+35+9:
+        for i in range(4):
+            for j in range(10):
+                if tablero.tablero[i][j] != 0:
+                    if ((j*60 < bola.x < j*60 + 59) or (j*60 < bola.x + 10 < j*60 + 59)) and (
+                            (i * 10 + 35 < bola.y < i * 10 + 35 + 9) or (i * 10 + 35 < bola.y + 10 < i * 10 + 35 + 9)):
+                        tablero.tablero[i][j] = 0
+                        bola.vy *= -1
+                        golpes += 1
 
 
-pygame.quit()
+def main():
+    global bola, golpes, font, r1, tablero
+    ventana = pygame.display.set_mode((600, 400))
+    ventana.fill((0, 0, 0))
+    bola = pelota(ventana, 50, 100)
+    bola.vx = 5
+    bola.vy = 2
+    golpes = 0
+    pygame.font.init()
+    font = pygame.font.SysFont("Arial", 30)
+    jugar = True
+    r1 = Raqueta(ventana)
+    tablero = Bloques(ventana)
+    clock = pygame.time.Clock()
+    while jugar:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                jugar = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    r1.izq = True
+                if event.key == pygame.K_RIGHT:
+                    r1.der = True
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    r1.izq = False
+                if event.key == pygame.K_RIGHT:
+                    r1.der = False
+        bola.mover()
+        r1.mover()
+        colisiones()
+        if bola.x >= 590:
+            bola.vx *= -1
+            bola.x = 590
+            # golpes += 1
+        if bola.x <= 0:
+            bola.vx *= -1
+            bola.x = 0
+            # golpes += 1
+        if bola.y + 10 > r1.y:
+            if (r1.x < bola.x < r1.x + r1.tamano) or (r1.x < bola.x + 10 < r1.x + r1.tamano):
+                porcentaje = (bola.x - r1.centro) / (r1.tamano / 2)
+                bola.vx += porcentaje*10
+                bola.vx = -10 if bola.vx < -10 else 10 if bola.vx > 10 else bola.vx
+                bola.vy *= -1
+                bola.y = r1.y - 10
+                # golpes += 1
+            elif bola.y > 400:
+                bola.y = 100
+        if bola.y <= 0:
+            bola.vy *= -1
+            bola.y = 0
+            # golpes += 1
+        refrescar(ventana)
+        clock.tick(60)
+        pygame.display.update()
+
+
+if __name__ == '__main__':
+    main()
