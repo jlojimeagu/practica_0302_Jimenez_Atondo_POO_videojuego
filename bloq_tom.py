@@ -12,11 +12,11 @@ class Bloques:
             for j in range(10):
                 if self.tablero[i][j] != 0:
                     if self.tablero[i][j] == 4:
-                        color = pygame.image.load("ladrillo.png")
+                        color = (255, 255, 255)
                     elif self.tablero[i][j] == 3:
-                        color = pygame.image.load("ladrillo.png")
+                        color = (55, 255, 255)
                     elif self.tablero[i][j] == 2:
-                        color = pygame.image.load("ladrillo.png")
+                        color = (55, 55, 255)
                     elif self.tablero[i][j] == 1:
-                        color = pygame.image.load("ladrillo.png")
+                        color = (255, 55, 255)
                     pygame.draw.rect(self.ventana, color, (j * 60, i * 10 + 35, 59, 9))

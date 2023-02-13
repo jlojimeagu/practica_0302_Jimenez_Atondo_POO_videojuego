@@ -1,64 +1,7 @@
 import pygame
-
-class pelota:
-    def __init__(self, ventana, x, y):
-        self.ventana = ventana
-        self.x = x
-        self.y = y
-        self.vx = 0
-        self.vy = 0
-
-    def dibujar(self):
-        pygame.draw.rect(self.ventana, (255, 255, 255), (self.x, self.y, 10, 10))
-
-    def mover(self):
-        self.x += self.vx
-        self.y += self.vy
-
-
-class Raqueta:
-    def __init__(self, ventana):
-        self.tamano = 80
-        self.x = 600/2 - self.tamano/2
-        self.y = 380
-        self.centro = self.x + self.tamano/2
-        self.ventana = ventana
-        self.izq = False
-        self.der = False
-
-    def dibujar(self):
-        pygame.draw.rect(self.ventana, (255, 255, 255), (self.x, self.y, self.tamano, 10))
-
-    def mover(self):
-        if self.izq: self.x -= 10
-        if self.der: self.x += 10
-        self.x = 0 if self.x < 0 else 600 - self.tamano if self.x + self.tamano > 600 else self.x
-        self.centro = self.x + self.tamano / 2
-
-
-class Bloques:
-    def __init__(self, ventana):
-        self.ventana = ventana
-        self.tablero = [[4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-                        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-                        [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-                        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-
-    def dibujar(self):
-        for i in range(4):
-            for j in range(10):
-                if self.tablero[i][j] != 0:
-                    if self.tablero[i][j] == 4:
-                        color = (255, 255, 255)
-                    elif self.tablero[i][j] == 3:
-                        color = (55, 255, 255)
-                    elif self.tablero[i][j] == 2:
-                        color = (55, 55, 255)
-                    elif self.tablero[i][j] == 1:
-                        color = (255, 55, 255)
-                    pygame.draw.rect(self.ventana, color, (j*60, i*10 + 35, 59, 9))
-
-
+from bloq_tom import Bloques
+from pelota import pelota
+from Raqueta import Raqueta
 def refrescar(ventana):
     ventana.fill((0, 0, 0))
     bola.dibujar()
@@ -68,8 +11,6 @@ def refrescar(ventana):
     text_rect = text.get_rect()
     text_rect.centerx = 300
     ventana.blit(text, text_rect)
-
-
 def colisiones():
     global golpes
     if bola.y < 3*10+35+9:

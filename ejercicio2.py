@@ -4,7 +4,6 @@ from pygame import mixer
 pygame.init()
 ventana = pygame.display.set_mode((640, 480))
 pygame.display.set_caption("the tom´s game")
-pygame.
 #Crear el objeto pelota, define su velocidad y su rectángulo
 ball = pygame.image.load("ball.png")
 ballrect = ball.get_rect()
@@ -32,9 +31,8 @@ fuente = pygame.font.Font(None, 36)
 jugando = True
 while jugando:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or pygame.K_SPACE == pygame.QUIT:
             jugando = False
-
     # Compruebo si se ha pulsado alguna tecla
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
