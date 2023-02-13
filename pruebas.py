@@ -1,74 +1,171 @@
+# pong!
 import pygame
-# from bloq_tom import bloque
-# from pygame import mixer
+from pygame import gfxdraw
 
-pygame.init()
-ventana = pygame.display.set_mode((640, 480))
-pygame.display.set_caption("the tom´s game")
 
-ball = pygame.image.load("ball.png")
-ballrect = ball.get_rect()
-speed = [5, 5]
-ball_speed = 1
-ballrect.move_ip(320, 240)
+class Brick:
+    "Draw Player 2"
 
-# Crea el objeto bate, y obtengo su rectángulo
-bate = pygame.image.load("bate.png")
-baterect = bate.get_rect()
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.rect = pygame.Rect(self.x, self.y, 60, 20)
 
-# pongo los parametros para la musica
-# mixer.init()
-# theme_sound = mixer.music.load('musica.mp3')
-# theme_sound = mixer.music.set_volume(10)
-# theme_sound = mixer.music.play()
+    def update(self):
+        pygame.draw.rect(screen, GREEN, (self.x, self.y, 60, 20))
 
-# Pongo el bate en la parte inferior de la pantalla
-baterect.move_ip(240, 450)
 
-# blo = bloque(0, 0, "ladrillo.png")
+class Bar:
+    "Draw Player 2"
 
-fuente = pygame.font.Font(None, 36)
-jugando = True
-while jugando:
-    keys = pygame.key.get_pressed()
-    ballrect = ballrect.move(speed)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT or keys[pygame.K_SPACE]:
-            jugando = False
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
-    # Compruebo si se ha pulsado alguna tecla
-    if keys[pygame.K_LEFT]:
-        baterect = baterect.move(-7, 0)
-    if keys[pygame.K_RIGHT]:
-        baterect = baterect.move(7, 0)
-    # Compruebo si hay colisión
-    if baterect.colliderect(ballrect):
-        speed[1] = -speed[1]
-        ballrect = ballrect.move(speed[0]*ball_speed, speed[1]*ball_speed)
-    if ballrect.left < 0 or ballrect.right > ventana.get_width():
-        speed[0] = -speed[0]
-    if ballrect.top < 0:
-        speed[1] = -speed[1]
-    # Aumento velocidad de la pelota
+    def update(self):
+        pygame.draw.rect(screen, RED, (self.x, self.y, 60, 10))
+        self.rect = pygame.Rect(self.x, self.y, 60, 10)
 
-    # Mensaje de Game Over
-    if ballrect.bottom > ventana.get_height():
-        texto = fuente.render("Game Over", True, (125, 125, 125))
-        text2 = fuente.render("press space to finish", True, (125, 125, 125))
-        text2rect = text2.get_rect()
-        textorect = texto.get_rect()
-        texto_x = ventana.get_width() / 2 - textorect.width / 2
-        texto_y = ventana.get_height() / 2 - textorect.height / 2
-        text2_x = ventana.get_width() / 2.2 - textorect.width / 2
-        text2_y = ventana.get_height() / 2.5 - textorect.height / 2.5
-        ventana.blit(texto, [texto_x, texto_y])
-        ventana.blit(text2, [text2_x, text2_y])
+
+class Ball:
+    "Draw Player 2"
+
+    def __init__(self, xb, yb):
+        self.xb = xb
+        self.yb = yb
+
+    def update(self):
+        "The ball moves"
+        global ball
+        global ball_x, ball_y
+
+        # sull'asse x Va verso sinistra
+        if ball_x == "left":
+            # sottraggo perchè vado a sinistra
+            ball.xb -= vel_bal
+            # se arriva a 10 rimbalza
+            if ball.xb < 10:
+                ball_x = "right"
+        # va in basso
+        if ball_y == 'down':
+            # allora aumenta y quando va in basso (parte da 0 in alto)
+            ball.yb += vel_bal
+        if ball_y == 'up':
+            # quando va in alto tolgo
+            ball.yb -= vel_bal
+            # se arriva in cima rimbalza in basso
+            if ball.yb < 10:
+                ball_y = 'down'
+        # se va a destra aumenta x
+        if ball_x == "right":
+            ball.xb += vel_bal
+            # a 480 rimbalza verso sinistra
+            if ball.xb > 480:
+                ball_x = "left"
+        gfxdraw.filled_circle(screen, ball.xb, ball.yb, 5, GREEN)
+        self.rect = pygame.Rect(self.xb, self.yb, 10, 10)
+
+
+def collision():
+    global ball, bar, ball_y
+
+    if ball.rect.colliderect(bar):
+        print("Collision detected")
+        ball_y = "up"
+        print(ball_y)
+        print(ball.yb)
+        speed_up()
+
+    for brick in bricks:
+        if ball.rect.colliderect(brick):
+            if ball_y == "up":
+                ball_y = "down"
+            else:
+                ball_y = "up"
+
+    if ball.yb > 500:
+        ball.xb, ball.yb = 500, 300
+
+
+def exit(event):
+    global loop
+
+    if event.type == pygame.QUIT:
+        loop = 0
+    if event.type == pygame.KEYUP:
+        if event.key == pygame.K_ESCAPE:
+            loop = 0
+    return loop
+
+
+def speed_up():
+    global bar, vel_bal
+    bar.x = pygame.mouse.get_pos()[0]
+    if startx == bar.x:
+        vel_bal = 2
+        print("Normal speed")
     else:
-        # dibujo a jerry
-        ventana.fill((0, 0, 0))
-        ventana.blit(ball, ballrect)
-        # Dibujo el bate
-        ventana.blit(bate, baterect)
+        vel_bal = 3
+        print("Speed up")
 
-    pygame.display.flip()
-    pygame.time.Clock().tick(60)
+
+def create_bricks():
+    "The bricks scheme"
+    blist = """
+11001
+11111
+01111
+01010
+""".splitlines()[1:]
+    bricks = []
+    h = 30
+    w = 0
+    for line in blist:
+        for brick in line:
+            if brick == "1":
+                bricks.append(Brick(20 + w * 100, h))
+            w += 1
+            if w == 5:
+                w = 0
+                h += 50
+    return bricks
+
+def show_bricks():
+    for brick in bricks:
+        brick.update()
+
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+ball_x = 'left'
+ball_y = 'down'
+scorep1 = 0
+scorep2 = 0
+vel_bal = 2
+pygame.init()
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode((500, 500))
+pygame.display.set_caption("Game")
+startx = 0
+bar = Bar(10, 480)
+ball = Ball(100, 100)
+bricks = create_bricks()
+pygame.mouse.set_visible(False)
+loop = 1
+while loop:
+    screen.fill((0, 0, 0))
+    keys = pygame.key.get_pressed()
+    for event in pygame.event.get():
+        loop = exit(event)
+    if pygame.mouse.get_pos()[0] > 10 and pygame.mouse.get_pos()[0] < 430:
+        bar.x = pygame.mouse.get_pos()[0]
+    ball.update()
+    bar.update()
+    collision()
+    startx = bar.x
+    show_bricks()
+    pygame.display.update()
+    clock.tick(120)
+
+
+pygame.quit()
