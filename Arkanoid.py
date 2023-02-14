@@ -1,16 +1,20 @@
+# Importa todos los archivos necesarios
 import pygame
 from bloq_tom import Bloques
 from pelota import pelota
 from Raqueta import Raqueta
+#Refresco la pantalla
 def refrescar(ventana):
     ventana.fill((0, 0, 0))
     bola.dibujar()
     r1.dibujar()
     tablero.dibujar()
+    #Añadimos un contador
     text = font.render(str(golpes), True, ((255, 255, 255)))
     text_rect = text.get_rect()
     text_rect.centerx = 300
     ventana.blit(text, text_rect)
+#Comprobacion de colisiones
 def colisiones():
     global golpes
     if bola.y < 3*10+35+9:
@@ -18,12 +22,13 @@ def colisiones():
             for j in range(10):
                 if tablero.tablero[i][j] != 0:
                     if ((j*60 < bola.x < j*60 + 59) or (j*60 < bola.x + 10 < j*60 + 59)) and (
-                            (i * 10 + 35 < bola.y < i * 10 + 35 + 9) or (i * 10 + 35 < bola.y + 10 < i * 10 + 35 + 9)):
+                            (i * 10 + 35 < bola.y < i * 10 + 35 + 9) or (i * 10 + 35 < bola.y + 10 < i * 10 +
+                                                                         35 + 9)):
                         tablero.tablero[i][j] = 0
                         bola.vy *= -1
                         golpes += 1
 
-
+#Inicia el juego
 def main():
     global bola, golpes, font, r1, tablero
     ventana = pygame.display.set_mode((600, 400))
@@ -71,6 +76,8 @@ def main():
                 bola.vy *= -1
                 bola.y = r1.y - 10
                 # golpes += 1
+
+        #La pelota reaparece en la parte superior de la pantalla
             elif bola.y > 400:
                 bola.y = 100
         if bola.y <= 0:
