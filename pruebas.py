@@ -58,11 +58,11 @@ def main():
         if bola.x >= 590:
             bola.vx *= -1
             bola.x = 590
-            # golpes += 1
+            # golpes += 1 colicion de la bola con los laterales 
         if bola.x <= 0:
             bola.vx *= -1
             bola.x = 0
-            # golpes += 1
+            # golpes += 1 varia el angulo de la bola con respecto a la insercion en la raqueta
         if bola.y + 10 > r1.y:
             if (r1.x < bola.x < r1.x + r1.tamano) or (r1.x < bola.x + 10 < r1.x + r1.tamano):
                 porcentaje = (bola.x - r1.centro) / (r1.tamano / 2)
