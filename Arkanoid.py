@@ -57,6 +57,8 @@ def main():
                     r1.izq = False
                 if event.key == pygame.K_RIGHT:
                     r1.der = False
+                if event.key == pygame.K_SPACE:
+                    jugar = False
         bola.mover()
         r1.mover()
         colisiones()
@@ -78,13 +80,18 @@ def main():
                 # golpes += 1
 
         #La pelota reaparece en la parte superior de la pantalla
-            elif bola.y > 400:
-                bola.y = 100
+            elif bola.y >= 400:
+                text1 = font.render("Game over\npress space to exit", True, ((255, 255, 255)))
+                text1_rect = text1.get_rect()
+                text1_rect.centerx = 300
+                ventana.blit(text1, text1_rect)
+
         if bola.y <= 0:
             bola.vy *= -1
             bola.y = 0
             # golpes += 1
         refrescar(ventana)
+
         clock.tick(60)
         pygame.display.update()
 
